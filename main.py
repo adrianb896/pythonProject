@@ -42,16 +42,16 @@ childrenParent = {'.*:HRD:':('\S*:HRD:\S*', '\S*:HRS:\S*'), '.*:HRS:':('\S*:HRS:
                   '.*:URS:':('\S*:URS:\S*')}
 
 
-def parseDocument(list):  # this function is able to pass a child tag with one parent tag
+def parseDocument(list):  # this function is able to pass a parent tag with one child tag
     index = 0
     ind = []
     for para in list:  # for each paragraph in the documents look for these list of tags
-        for child, parents in childrenParent.items():  # look for items within our dictionary childrenParent
-            if re.search(child, para):  # search for the initial child tag within each paragraph(line) of a document
+        for parent, children in childrenParent.items():  # look for items within our dictionary childrenParent
+            if re.search(parent, para):  # search for the initial parent tag within each paragraph(line) of a document
                 ind.append(index)
                 tt = para
-                y = re.findall(parents[0], para)
-                z = re.findall(parents[0], para)
+                y = re.findall(children[0], para)
+                z = re.findall(children[0], para)
                 tt = tt.replace(y[0], '')
                 tt = tt.replace(z[0], '')
                 tt = tt.strip()
@@ -59,40 +59,40 @@ def parseDocument(list):  # this function is able to pass a child tag with one p
                 # print(y)
                 # print(tt)
                 # print(z)
-                # dict1 = {'Child Tag': [y],
-                #          'Info': [tt],
-                #          'Parent Tag': [z]
-                #           }
-                # df = pd.DataFrame(dict1)
-                # print(tabulate(df, headers='keys', tablefmt='fancy_grid'))
+                dict1 = {'Parent Tag': [y],
+                         'Info': [tt],
+                         'Child Tag': [z]
+                          }
+                df = pd.DataFrame(dict1)
+                print(tabulate(df, headers='keys', tablefmt='fancy_grid'))
             index = index + 1
             # print(ind)
 
 
-def parseDocument_2(list):  # this function is able to pass a child tag with two parent tags
+def parseDocument_2(list):  # this function is able to pass a parent tag with two child tags
     index = 0
     ind = []
     for para in list:  # for each paragraph in the documents look for these list of tags
-        for child, parents in childrenParent.items():  # look for items within our dictionary childrenParent
-            if re.search(child, para):  # search for the initial child tag within each paragraph(line) of a document
+        for parent, children in childrenParent.items():  # look for items within our dictionary childrenParent
+            if re.search(parent, para):  # search for the initial child tag within each paragraph(line) of a document
                 ind.append(index)
                 tt = para
-                y = re.findall(parents[0], para)
+                y = re.findall(children[0], para)
                 if y[0].startswith("[") and y[0].endswith("]"):
                     continue
-                if re.search(parents[1][0], para):
-                    z = re.findall(parents[1][0], para)
+                if re.search(children[1][0], para):
+                    z = re.findall(children[1][0], para)
                     tt = tt.replace(y[0], '')
                     tt = tt.replace(z[0], '')
                     tt = tt.strip()
-                elif re.search(parents[1][1], para):
-                    z = re.findall(parents[1][1], para)
+                elif re.search(children[1][1], para):
+                    z = re.findall(children[1][1], para)
                     tt = tt.replace(y[0], '')
                     tt = tt.replace(z[0], '')
                     tt = tt.strip()
-                dict1 = {'Child Tag': [y],
+                dict1 = {'Parent Tag': [y],
                          'Info': [tt],
-                         'Parent Tag': [z]
+                         'Child Tag': [z]
                          }
                 df = pd.DataFrame(dict1)
                 print(tabulate(df, headers='keys', tablefmt='fancy_grid'))
@@ -100,19 +100,19 @@ def parseDocument_2(list):  # this function is able to pass a child tag with two
             #print(ind)
 
 
-def parseDocument_3(list):  # this function is able to pass a child tag with no parent tags
+def parseDocument_3(list):  # this function is able to pass a parent tag with no child tags
     index = 0
     ind = []
     for para in list:  # for each paragraph in the documents look for these list of tags
-        for child, parents in childrenParent.items():  # look for items within our dictionary childrenParent
-            if re.search(child, para):  # search for the initial child tag within each paragraph(line) of a document
+        for parent, children in childrenParent.items():  # look for items within our dictionary childrenParent
+            if re.search(parent, para):  # search for the initial child tag within each paragraph(line) of a document
                 ind.append(index)
                 tt = para
-                y = re.findall(child, para)
+                y = re.findall(parent, para)
                 tt = tt.replace(y[0], '')
                 tt = tt.strip()
 
-                dict1 = {'Child Tag': [y],
+                dict1 = {'Parent Tag': [y],
                          'Info': [tt]
                          }
                 df = pd.DataFrame(dict1)
@@ -120,17 +120,17 @@ def parseDocument_3(list):  # this function is able to pass a child tag with no 
             index = index + 1
             # print(ind)
 
-#parseDocument(hdsLst)
-#parseDocument(hrsLst)
-#parseDocument_2(htpLst)
-#parseDocument(htrLst)
-#parseDocument_2(prsLst)
-#parseDocument_3(riskLst)
-#parseDocument(sdsLst)
-#parseDocument_2(srsAceLst)
-#parseDocument(srsBolusLst)
-#parseDocument_2(srsDoseLst)
-#parseDocument(svapLst)
-#parseDocument(svatrLst)
-#parseDocument(svetrLst)
-#parseDocument_3(ursLst)
+#parseDocument(hdsLst) # works with z having parent[0]
+#parseDocument(hrsLst) # works with z having parent[0]
+#parseDocument_2(htpLst) # works with second function
+#parseDocument(htrLst) # works with z having parent[0]
+#parseDocument_2(prsLst) # still needs to be tested and fixed
+#parseDocument_3(riskLst) # works with the third function
+#parseDocument(sdsLst) # works with z having parent[0]
+#parseDocument_2(srsAceLst) # works with the second function
+#parseDocument(srsBolusLst) # works with z having parent[0]
+#parseDocument_2(srsDoseLst) # still needs to be tested and fixed
+#parseDocument(svapLst) # works with z having parent[0]
+#parseDocument(svatrLst) # works with z having parent[0]
+#parseDocument(svetrLst) # works with z having parent[0]
+#parseDocument_3(ursLst) # works with the third function
